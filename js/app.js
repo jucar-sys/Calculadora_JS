@@ -24,14 +24,11 @@ var pantalla = document.getElementById('display');
 
 var validaLongitud = true;
 var resultado = 0;
-var cantidad = 0;
 var operacion = "ninguna";
-var valorIgual = 0;
-
-var igualSuma = 0;
-var igualResta = 0;
-var igualMultiplicacion = 0;
-var igualDivision = 0;
+var num1 = 0;
+var num2 = 0;
+var signo = "";
+var opEnCadena = 0;
 //***********************************************************************//
 
 
@@ -212,12 +209,11 @@ function reiniciarValores(){
   pantalla.innerHTML = "0";
   validaLongitud = true;
   resultado = 0;
-  cantidad = 0;
   operacion = "ninguna";
-  igualSuma = 0;
-  igualResta = 0;
-  igualMultiplicacion = 0;
-  igualDivision = 0;
+  num1 = 0;
+  num2 = 0;
+  signo = "";
+  opEnCadena = 0;
 }
 //----------------------------------------------//
 
@@ -255,53 +251,65 @@ function validarNumDigitos(){
 function realizarOperacion(tipo){
   switch (tipo.id) {
     case "mas":
-      cantidad = parseInt(pantalla.innerHTML);
-      console.log("\n1.+ Valor de CANTIDAD al presionar +: "+cantidad);
-      console.log("2.+ Valor de VALORIGUAL al presionar +: "+valorIgual);
-      console.log("3.+ Valor de RESULTADO al presionar +: "+valorIgual);
-      resultado = (resultado + cantidad) - valorIgual;
-      console.log("4.+ Valor de RESULTADO al sumar (RESULTADO + CANTIDAD) - VALORIGUAL desde +: "+resultado);
-      operacion = "suma";
-      reiniciarPantalla();
-      break;
-    case "menos":
-      cantidad = parseInt(pantalla.innerHTML);
-      if (resultado == 0) {
-        console.log(cantidad);
-        resultado = cantidad;
-        console.log(resultado);
-        operacion = "resta";
+      if (opEnCadena == 0) {
+        num1 = parseFloat(pantalla.innerHTML);
+        console.log("oec = 0 + num1: "+num1);
+        operacion = "suma";
         reiniciarPantalla();
+        opEnCadena = 1;
+        break;
       }else {
-        console.log(cantidad);
-        console.log(resultado);
-        resultado = resultado - cantidad;
-        console.log(resultado);
+        num1 = num1 + parseFloat(pantalla.innerHTML);
+        console.log("oec = 1 + num1: "+num1);
+        operacion = "suma";
+        reiniciarPantalla();
+        break;
+      }
+    case "menos":
+      if (opEnCadena == 0) {
+        num1 = parseFloat(pantalla.innerHTML);
+        console.log("oec = 0 - num1: "+num1);
         operacion = "resta";
         reiniciarPantalla();
+        opEnCadena = 1;
+        break;
+      } else {
+        num1 = num1 - parseFloat(pantalla.innerHTML);
+        console.log("oec = 1 - num1: "+num1);
+        operacion = "resta";
+        reiniciarPantalla();
+        break;
       }
-      break;
     case "por":
-      cantidad = parseInt(pantalla.innerHTML);
-      if (resultado == 0) {
-        resultado++
+      if (opEnCadena == 0) {
+        num1 = parseFloat(pantalla.innerHTML);
+        console.log("oec = 0 * num1: "+num1);
+        operacion = "mult";
+        reiniciarPantalla();
+        opEnCadena = 1;
+        break;
+      } else {
+        num1 = num1 * parseFloat(pantalla.innerHTML);
+        console.log("oec = 1 * num1: "+num1);
+        operacion = "mult";
+        reiniciarPantalla();
+        break;
       }
-      console.log(resultado);
-      resultado = resultado * cantidad;
-      operacion = "mult";
-      reiniciarPantalla();
-      break;
     case "dividido":
-      cantidad = parseInt(pantalla.innerHTML);
-      console.log(cantidad);
-      if (resultado == 0) {
-        resultado++
+      if (opEnCadena == 0) {
+        num1 = parseFloat(pantalla.innerHTML);
+        console.log("oec = 0 / num1: "+num1);
+        operacion = "div";
+        reiniciarPantalla();
+        opEnCadena = 1;
+        break;
+      } else {
+        num1 = num1 / parseFloat(pantalla.innerHTML);
+        console.log("oec = 1 / num1: "+num1);
+        operacion = "div";
+        reiniciarPantalla();
+        break;
       }
-      console.log(resultado);
-      resultado = resultado / cantidad;
-      operacion = "div";
-      reiniciarPantalla();
-      break;
     default:
   }
 }
@@ -309,30 +317,66 @@ function realizarOperacion(tipo){
 
 //Función para mostrar el resultado de las operaciones//
 function resultadoOperaciones(){
-  if (operacion == "suma") {
-    cantidad = parseInt(pantalla.innerHTML);
-    valorIgual = cantidad;
-    console.log("\n1.= Valor de CANTIDAD al presionar =: "+cantidad);
-    console.log("2.= Valor de VALORIGUAL al presionar =: "+valorIgual);
-    console.log("3.= Valor de RESULTADO al presionar =: "+resultado);
-    resultado = resultado + cantidad;
-    console.log("4.= Valor de RESULTADO al operar RESULTADO + CANTIDAD desde el =: "+resultado);
-    pantalla.innerHTML = resultado.toString().slice(0, 8);
-  }
-  if (operacion == "resta") {
-    cantidad = parseInt(pantalla.innerHTML);
-    resultado = resultado - cantidad;
-    pantalla.innerHTML = resultado.toString().slice(0, 8);
-  }
-  if (operacion == "mult") {
-    cantidad = parseInt(pantalla.innerHTML);
-    resultado = resultado * cantidad;
-    pantalla.innerHTML = resultado.toString().slice(0, 8);
-  }
-  if (operacion == "div") {
-    cantidad = parseInt(pantalla.innerHTML);
-    resultado = resultado / cantidad;
-    pantalla.innerHTML = resultado.toString().slice(0, 8);
+  switch (operacion) {
+    case "suma":
+      num2 = parseFloat(pantalla.innerHTML);
+      console.log("= + num2: "+num2);
+      resultado = num1 + num2;
+      pantalla.innerHTML = resultado.toString().slice(0, 8);
+      operacion = "igual";
+      signo = "+";
+      opEnCadena = 0;
+      break;
+    case "resta":
+      num2 = parseFloat(pantalla.innerHTML);
+      console.log("= - num2: "+num2);
+      resultado = num1 - num2;
+      pantalla.innerHTML = resultado.toString().slice(0, 8);
+      operacion = "igual";
+      signo = "-";
+      opEnCadena = 0;
+      break;
+    case "mult":
+      num2 = parseFloat(pantalla.innerHTML);
+      console.log("= * num2: "+num2);
+      if (resultado == 0) {
+        resultado++
+      }
+      resultado = num1 * num2;
+      pantalla.innerHTML = resultado.toString().slice(0, 8);
+      operacion = "igual";
+      signo = "*";
+      opEnCadena = 0;
+      break;
+    case "div":
+      num2 = parseFloat(pantalla.innerHTML);
+      console.log("= / num2: "+num2);
+      if (resultado == 0) {
+        resultado++
+      }
+      resultado = num1 / num2;
+      pantalla.innerHTML = resultado.toString().slice(0, 8);
+      operacion = "igual";
+      signo = "/";
+      opEnCadena = 0;
+      break;
+    case "igual":
+      if (signo == "+") {
+        resultado = resultado + num2
+      }
+      if (signo == "-") {
+        resultado = resultado - num2
+      }
+      if (signo == "*") {
+        resultado = resultado * num2
+      }
+      if (signo == "/") {
+        resultado = resultado / num2
+      }
+      pantalla.innerHTML = resultado.toString().slice(0, 8);
+      opEnCadena = 0;
+      break;
+    default:
   }
 }
 //----------------------------------------------------//
